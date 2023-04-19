@@ -6,7 +6,7 @@ import 'package:twitter_app/theme/pallete.dart';
 
 class CreateTweetScreen extends ConsumerStatefulWidget {
   static route() => MaterialPageRoute(
-        builder: (content) => const CreateTweetScreen(),
+        builder: (_) => const CreateTweetScreen(),
       );
   const CreateTweetScreen({super.key});
 
@@ -18,7 +18,7 @@ class CreateTweetScreen extends ConsumerStatefulWidget {
 class _CreateTweetScreenState extends ConsumerState<CreateTweetScreen> {
   @override
   Widget build(BuildContext context) {
-    final currentUser = ref.watch(currentUserDetailsProvider).value;
+    // final currentUser = ref.watch(currentUserDetailsProvider);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -37,23 +37,30 @@ class _CreateTweetScreenState extends ConsumerState<CreateTweetScreen> {
           ),
         ],
       ),
-      body: currentUser == null
-          ? const Loader()
-          : SafeArea(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          backgroundImage: NetworkImage(currentUser.profilePic),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ),
+      body: ref.watch(currentUserDetailsProvider).when(
+            data: (currentUser) {
+              return currentUser == null
+                  ? const Loader()
+                  : SafeArea(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                CircleAvatar(
+                                  backgroundImage:
+                                      NetworkImage(currentUser.profilePic),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+            },
+            error: (error, stackTrace) => ErrorPage(error: error.toString()),
+            loading: () => const Loader(),
+          ),
     );
   }
 }

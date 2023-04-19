@@ -24,7 +24,7 @@ final currentUserDetailsProvider = FutureProvider((ref) {
 
 final userDetailsProvider = FutureProvider.family((ref, String uid) {
   final authController = ref.watch(authControllerProvider.notifier);
-  return authController.getUserData(uid as Stream);
+  return authController.getUserData(uid);
 });
 
 final currentUserAccountProvider = FutureProvider((ref) {
@@ -99,8 +99,8 @@ class AuthController extends StateNotifier<bool> {
     );
   }
 
-  Future<UserModel> getUserData(Stream uid) async {
-    final document = await _userAPI.getUserData(uid as String);
+  Future<UserModel> getUserData(String uid) async {
+    final document = await _userAPI.getUserData(uid);
     final updatedUser = UserModel.fromMap(document.data);
     return updatedUser;
   }
