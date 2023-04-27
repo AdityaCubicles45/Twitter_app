@@ -11,7 +11,6 @@ class UserModel {
   final String uid;
   final String bio;
   final bool isTwitterBlue;
-
   const UserModel({
     required this.email,
     required this.name,

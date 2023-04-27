@@ -16,9 +16,16 @@ class CreateTweetScreen extends ConsumerStatefulWidget {
 }
 
 class _CreateTweetScreenState extends ConsumerState<CreateTweetScreen> {
+  final tweetTextController = TextEditingController();
+  @override
+  void dispose() {
+    super.dispose();
+    tweetTextController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    // final currentUser = ref.watch(currentUserDetailsProvider);
+    final currentUser = ref.watch(currentUserDetailsProvider);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -37,30 +44,39 @@ class _CreateTweetScreenState extends ConsumerState<CreateTweetScreen> {
           ),
         ],
       ),
-      body: ref.watch(currentUserDetailsProvider).when(
-            data: (currentUser) {
-              return currentUser == null
-                  ? const Loader()
-                  : SafeArea(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                CircleAvatar(
-                                  backgroundImage:
-                                      NetworkImage(currentUser.profilePic),
-                                )
-                              ],
-                            )
-                          ],
+      body: currentUser == null
+          ? const Loader()
+          : SafeArea(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(currentUser.profilePic),
+                          radius: 30,
                         ),
-                      ),
-                    );
-            },
-            error: (error, stackTrace) => ErrorPage(error: error.toString()),
-            loading: () => const Loader(),
-          ),
+                        const SizedBox(width: 15),
+                        TextField(
+                          controller: tweetTextController,
+                          style: const TextStyle(
+                            fontSize: 22,
+                          ),
+                          decoration: const InputDecoration(
+                            hintText: "What's Happening?",
+                            hintStyle: TextStyle(
+                              color: Pallete.greyColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+      // error: (error, stackTrace) => ErrorPage(error: error.toString()),
+      // loading: () => const Loader(),
     );
   }
 }
